@@ -5,7 +5,7 @@ interface Circle {
   height: number;
   borderRadius: number;
   fillColor?: string;
-  className?:string;
+  className?: string;
   topValue?: number;
   rightValue?: number;
   bottomValue?: number;
