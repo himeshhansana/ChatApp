@@ -1,6 +1,4 @@
-import {
-  Image, KeyboardAvoidingView, Platform, Pressable, StatusBar, Text, View,
-} from "react-native";
+import { Image, KeyboardAvoidingView, Platform, Pressable, StatusBar, Text, View, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import "../../global.css";
 import { AlertNotificationRoot } from "react-native-alert-notification";
@@ -21,6 +19,7 @@ export default function SignUpScreen() {
     <AlertNotificationRoot>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 100}
         className="items-center flex-1 dark:bg-slate-950"
       >
         <SafeAreaView className="items-center justify-center p-5">

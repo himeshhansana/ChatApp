@@ -9,12 +9,16 @@ import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingScreen from './src/screens/SettingScreen';
+import ContactScreen from './src/screens/ContactScreen';
 import { ThemeProvider } from './src/theme/ThemeProvider';
+import AvatarScreen from './src/screens/AvatarScreen';
 
 
 export type RootStackParamList = {
   SplashScreen: undefined;
   SignUpScreen: undefined;
+  ContactScreen: undefined;
+  AvatarScreen: undefined;
   SignInScreen: undefined;
   HomeScreen: undefined;
   ProfileScreen: undefined;
@@ -28,9 +32,11 @@ export default function App() {
 
     <ThemeProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="SplashScreen">
+        <Stack.Navigator initialRouteName="AvatarScreen">
           <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="ContactScreen" component={ContactScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="AvatarScreen" component={AvatarScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
