@@ -10,6 +10,7 @@ import CircleShape from "../components/CircleShepe";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
+import { useTheme } from "../theme/ThemeProvider";
 
 type Props = NativeStackNavigationProp<RootStackParamList, "SplashScreen">;
 
@@ -24,9 +25,9 @@ export default function SplashScreen() {
         opacity.value = withTiming(1, { duration: 3000 });
 
         const timeout = setTimeout(() => {
-          navigation.replace("SignUpScreen");
+            navigation.replace("SignUpScreen");
         }, 4000);
-        
+
         return () => {
             clearTimeout(timeout);
         };
@@ -37,8 +38,15 @@ export default function SplashScreen() {
         return { opacity: opacity.value };
     });
 
+
+    const { applied } = useTheme();
+    const logo =
+        applied === "dark"
+            ? require("../../assets/logo-dark.png")
+            : require("../../assets/logo.png");
+
     return (
-        <SafeAreaView className="items-center justify-center flex-1">
+        <SafeAreaView className="items-center justify-center flex-1 bg-slate-50 dark:bg-slate-950" >
             <StatusBar hidden={true} />
 
             <CircleShape
@@ -61,7 +69,7 @@ export default function SplashScreen() {
 
             <Animated.View style={animatedStyle}>
                 <Image
-                    source={require("../../assets/logo.png")}
+                    source={logo}
                     style={{ height: 200, width: 220 }}
                 />
             </Animated.View>
