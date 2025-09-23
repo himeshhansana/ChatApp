@@ -5,8 +5,17 @@ import { AlertNotificationRoot } from "react-native-alert-notification";
 import { useTheme } from "../theme/ThemeProvider";
 import { FloatingLabelInput } from "react-native-floating-label-input";
 import { useState } from "react";
+import { NativeStackScreenProps, NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { Root } from "postcss";
+import { RootStackParamList } from "../../App";
+
+type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, "SignUpScreen">
 
 export default function SignUpScreen() {
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const { applied } = useTheme();
@@ -47,7 +56,8 @@ export default function SignUpScreen() {
           </View>
         </SafeAreaView>
         <View className="absolute w-full p-5 bottom-5">
-          <Pressable className="items-center justify-center bg-green-600 rounded-full h-14">
+          <Pressable className="items-center justify-center bg-green-600 rounded-full h-14"
+            onPress={() => navigation.replace("ContactScreen")}>
             <Text className="text-2xl font-bold text-slate-100 dark:text-slate-100">
               Next
             </Text>

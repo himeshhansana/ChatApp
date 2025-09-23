@@ -4,7 +4,8 @@ import "../../global.css";
 import { View, Image, Text } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { use, useState } from "react";
-import { CountryItem, CountryPicker } from "react-native-country-codes-picker";
+// import { CountryItem, CountryPicker } from "react-native-country-codes-picker";
+import CountryPicker, { Country, CountryCode } from "react-native-country-picker-modal";
 import { TextInput } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
@@ -18,8 +19,9 @@ type ContactProps = NativeStackNavigationProp<RootStackParamList, "ContactScreen
 export default function ContactScreen() {
     const navigation = useNavigation<ContactProps>();
 
-    const [show, setShow] = useState(false);
-    const [countryCode, setCountryCode] = useState<CountryItem | null>(null);
+    const [countryCode, setCountryCode] = useState<CountryCode>("LK");
+    const [country, setCountry] = useState<Country | null>(null);
+    const [show, setShow] = useState<boolean>(false);
 
     return (
         <SafeAreaView className="items-center flex-1 bg-white">
@@ -42,26 +44,41 @@ export default function ContactScreen() {
                         </Text>
                     </View>
                     <View className="w-full mt-5">
-                        <Pressable
-                            className="flex flex-row items-center justify-center w-full h-16 border-b-2 border-b-green-600"
-                            onPress={() => {
-                                setShow(true);
-                            }}
-                        >
-                            <Text className="text-lg font-bold">Select Country </Text>
+
+                        <View className="flex-row items-start justify-center h-12 my-3 mb-3 border-b-2 border-b-green-600">
+                            <CountryPicker
+                                countryCode={countryCode}
+                                withFilter
+                                withFlag
+                                withCountryNameButton
+                                withCallingCode
+                                visible={show}
+                                onClose={() => {
+                                    setShow(false);
+                                }}
+                                onSelect={(c) => {
+                                    setCountryCode(c.cca2);
+                                    setCountry(c);
+                                    setShow(false);
+                                }}
+                            />
                             <AntDesign
                                 name="caret-down"
                                 size={18}
                                 color="black"
                                 style={{ marginTop: 5 }}
                             />
-                        </Pressable>
+
+                        </View>
+
 
                         <View className="flex flex-row justify-center mt-2">
                             <TextInput
                                 inputMode="tel"
                                 className="h-16 font-bold text-lg border-y-2 border-y-green-600 w-[18%]"
                                 placeholder="+94"
+                                editable={false}
+                                value={country?`+ ${country.callingCode}`: `+94`}
                             />
                             <TextInput
                                 inputMode="tel"

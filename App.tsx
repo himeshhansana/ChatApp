@@ -32,7 +32,7 @@ export default function App() {
 
     <ThemeProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="AvatarScreen">
+        <Stack.Navigator initialRouteName="SplashScreen">
           <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ContactScreen" component={ContactScreen} options={{ headerShown: false }} />
