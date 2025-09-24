@@ -1,69 +1,111 @@
-import { Image, KeyboardAvoidingView, Platform, Pressable, StatusBar, Text, View, } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StatusBar,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import "../../global.css";
-import { AlertNotificationRoot } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 import { useTheme } from "../theme/ThemeProvider";
 import { FloatingLabelInput } from "react-native-floating-label-input";
 import { useState } from "react";
-import { NativeStackScreenProps, NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStack } from "../../App";
 import { useNavigation } from "@react-navigation/native";
-import { Root } from "postcss";
-import { RootStackParamList } from "../../App";
+import { useUserRegistration } from "../components/UserContext";
+import { validateFirstName, validateLastName } from "../util/Validation";
 
-type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, "SignUpScreen">
+type SignUpProps = NativeStackNavigationProp<RootStack, "SignUpScreen">;
 
 export default function SignUpScreen() {
-
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const navigation = useNavigation<SignUpProps>();
   const { applied } = useTheme();
   const logo =
-    applied === "dark"
+    applied === "light"
       ? require("../../assets/logo-dark.png")
       : require("../../assets/logo.png");
 
+  const { userData, setUserData } = useUserRegistration();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
   return (
-    <AlertNotificationRoot>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 100}
-        className="items-center flex-1 dark:bg-slate-950"
-      >
-        <SafeAreaView className="items-center justify-center p-5">
-          <StatusBar hidden={true} />
-          <Image source={logo} className="h-40 w-36" />
-          <View className="items-start justify-start w-full">
-            <Text className="font-bold text-slate-500 dark:text-slate-100">
-              Create your account and start the conversation TODAY
-            </Text>
-          </View>
-          <View className="self-stretch">
-            <View className="w-full my-3">
-              <FloatingLabelInput
-                value={firstName}
-                onChangeText={setFirstName}
-                label={"Enter Your First Name"}
-              />
-            </View>
-            <View className="w-full my-3">
-              <FloatingLabelInput
-                value={lastName}
-                onChangeText={setLastName}
-                label={"Enter Your Last Name"} />
-            </View>
-          </View>
-        </SafeAreaView>
-        <View className="absolute w-full p-5 bottom-5">
-          <Pressable className="items-center justify-center bg-green-600 rounded-full h-14"
-            onPress={() => navigation.replace("ContactScreen")}>
-            <Text className="text-2xl font-bold text-slate-100 dark:text-slate-100">
-              Next
-            </Text>
-          </Pressable>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "android" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "android" ? 100 : 100}
+      className="flex-1 items-center "
+    >
+      <SafeAreaView className="justify-center items-center p-5">
+        <StatusBar hidden={true} />
+        <Image source={logo} className="h-40 w-36" />
+        <View className="w-full justify-start items-start">
+          <Text className="font-bold text-slate-500 ">
+            Create your account and start the conversation TODAY
+          </Text>
         </View>
-      </KeyboardAvoidingView>
-    </AlertNotificationRoot>
+        <View className="self-stretch">
+          <View className="w-full my-3">
+            <FloatingLabelInput
+              label={"Enter Your First Name"}
+              value={userData.firstName}
+              onChangeText={(text) => {
+                setUserData((previous) => ({
+                  ...previous,
+                  firstName: text,
+                }));
+              }}
+            />
+          </View>
+          <View className="w-full my-3">
+            <FloatingLabelInput
+              label={"Enter Your Last Name"}
+              value={userData.lastName}
+              onChangeText={(text) => {
+                setUserData((previous) => ({
+                  ...previous,
+                  lastName: text,
+                }));
+              }}
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+      <View className="mt-1 w-full px-5">
+        <Pressable
+          className="bg-green-600 h-14 justify-center items-center rounded-full"
+          onPress={() => {
+            let validFirstName = validateFirstName(userData.firstName);
+            let validLastName = validateLastName(userData.lastName);
+            if (validFirstName) {
+              // skip null
+              Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: "Warning",
+                textBody: validFirstName,
+              });
+            } else if (validLastName) {
+              // skip null
+              Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: "Warning",
+                textBody: validLastName,
+              });
+            } else {
+              navigation.navigate("ContactScreen");
+            }
+          }}
+        >
+          <Text className="text-slate-100  font-bold text-lg">Next</Text>
+        </Pressable>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
