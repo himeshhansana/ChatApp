@@ -11,6 +11,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { useUserRegistration } from "../components/UserContext";
+import { validateProfileImage } from "../util/Validation";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 export default function AvatarScreen() {
   const [image, setImage] = useState<string | null>(null);
@@ -45,9 +47,9 @@ export default function AvatarScreen() {
 
 
   return (
-    <SafeAreaView className="bg-white flex-1">
+    <SafeAreaView className="flex-1 bg-white">
       <StatusBar hidden={true} />
-      <View className="flex-1 items-center ">
+      <View className="items-center flex-1 ">
         <View>
           <Image
             source={require("../../assets/logo.png")}
@@ -55,7 +57,7 @@ export default function AvatarScreen() {
           />
         </View>
         <View className="items-center">
-          <Text className="font-bold text-lg text-slate-700">
+          <Text className="text-lg font-bold text-slate-700">
             Choose a profile image
           </Text>
           <View className="items-center mt-2 h-72">
@@ -71,14 +73,14 @@ export default function AvatarScreen() {
                 />
               ) : (
                 <View className="items-center">
-                  <Text className="font-bold text-2xl text-slate-500">+</Text>
-                  <Text className="font-bold text-lg text-slate-500">
+                  <Text className="text-2xl font-bold text-slate-500">+</Text>
+                  <Text className="text-lg font-bold text-slate-500">
                     Add Image
                   </Text>
                 </View>
               )}
             </Pressable>
-            <Text className="text-lg my-2 text-slate-700 font-bold">
+            <Text className="my-2 text-lg font-bold text-slate-700">
               Or select an avatar
             </Text>
             <FlatList
@@ -97,7 +99,7 @@ export default function AvatarScreen() {
                 >
                   <Image
                     source={item}
-                    className="h-20 w-20 rounded-full mx-2 border-2 border-gray-200"
+                    className="w-20 h-20 mx-2 border-2 border-gray-200 rounded-full"
                   />
                 </TouchableOpacity>
               )}
@@ -107,14 +109,27 @@ export default function AvatarScreen() {
           </View>
         </View>
 
-        <View className="mt-2 w-full px-5">
+        <View className="w-full px-5 mt-2">
           <Pressable
-            className="h-14 bg-green-600 items-center justify-center rounded-full"
+            className="items-center justify-center bg-green-600 rounded-full h-14"
             onPress={() => {
-              console.log(userData);
+              const validProfile = validateProfileImage(
+                userData.profileImage
+                  ? { uri: userData.profileImage, type: "", fileSize: 0 } : null
+              );
+              if (validProfile) {
+                Toast.show({
+                  type: ALERT_TYPE.WARNING,
+                  title: "Warning",
+                  textBody: "Select a Profile image or an avatar"
+                });
+              } else {
+                console.log(userData);
+                console.log("Done");
+              }
             }}
           >
-            <Text className="font-bold text-lg text-slate-50">
+            <Text className="text-lg font-bold text-slate-50">
               Create Account
             </Text>
           </Pressable>
