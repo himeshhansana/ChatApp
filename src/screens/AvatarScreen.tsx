@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useUserRegistration } from "../components/UserContext";
 import { validateProfileImage } from "../util/Validation";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { createNewAccount } from "../api/UserService";
 
 export default function AvatarScreen() {
   const [image, setImage] = useState<string | null>(null);
@@ -112,7 +113,7 @@ export default function AvatarScreen() {
         <View className="w-full px-5 mt-2">
           <Pressable
             className="items-center justify-center bg-green-600 rounded-full h-14"
-            onPress={() => {
+            onPress={async () => {
               const validProfile = validateProfileImage(
                 userData.profileImage
                   ? { uri: userData.profileImage, type: "", fileSize: 0 } : null
@@ -124,6 +125,7 @@ export default function AvatarScreen() {
                   textBody: "Select a Profile image or an avatar"
                 });
               } else {
+                await createNewAccount(userData);
                 console.log(userData);
                 console.log("Done");
               }
