@@ -33,7 +33,7 @@ export default function App() {
         <UserRegistrationProvider>
           <NavigationContainer>
             <Stack.Navigator
-              initialRouteName="SplashScreen"
+              initialRouteName="HomeScreen"
               screenOptions={{
                 animation: "fade",
               }}
