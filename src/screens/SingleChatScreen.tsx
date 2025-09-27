@@ -1,11 +1,23 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { FlatList, Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+    NativeStackNavigationProp,
+    NativeStackScreenProps,
+} from "@react-navigation/native-stack";
+import {
+    FlatList,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    StatusBar,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStack } from "../../App";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
 
 type Message = {
     id: number;
@@ -15,15 +27,24 @@ type Message = {
     status?: "sent" | "delivered" | "read";
 };
 
-type SingleChatScreenProps = NativeStackNavigationProp<RootStack, "SingleChatScreen">;
+type SingleChatScreenProps = NativeStackScreenProps<RootStack, "SingleChatScreen">;
 
-export default function SingleChatScreen() {
-    const navigation = useNavigation<SingleChatScreenProps>();
+export default function SingleChatScreen({
+    route,
+    navigation,
+}: SingleChatScreenProps) {
+
 
     const [message, setMessage] = useState<Message[]>([
-        { id: 1, text: "Hi", sender: "friend", time: "10:56 AM" },
+        {
+            id: 3,
+            text: "Hello, Kohomada",
+            sender: "me",
+            time: "10:58 AM",
+            status: "read",
+        },
         { id: 2, text: "Hi, Hello", sender: "friend", time: "10:57 AM" },
-        { id: 3, text: "Hello, Kohomada", sender: "me", time: "10:58 AM", status: "read" },
+        { id: 1, text: "Hi", sender: "friend", time: "10:56 AM" },
     ]);
 
     const [input, setInput] = useState("");
@@ -35,31 +56,36 @@ export default function SingleChatScreen() {
                 <View className="flex-row items-center gap-2">
                     <Image
                         source={require("../../assets/avatar/avatar_1.png")}
-                        className="p-1 border-gray-400 rounded-full h-14 w-14"
+                        className="p-1 border-2 border-gray-400 rounded-full h-14 w-14"
                     />
-                    <View className="space-y-2">
+                    <View className="space-y-2 ">
                         <Text className="text-2xl font-bold">Sahan Perera</Text>
-                        <Text className="text-xs italic font-bold text-gray-500">Last seen today at 11.00 am</Text>
+                        <Text className="text-xs italic font-bold text-gray-500">
+                            Last seen today at 11:00 am
+                        </Text>
                     </View>
                 </View>
             ),
-            headerRight: () => <TouchableOpacity>
-                <Ionicons name="ellipsis-vertical" size={24} color="black" />
-            </TouchableOpacity>,
+            headerRight: () => (
+                <TouchableOpacity>
+                    <Ionicons name="ellipsis-vertical" size={24} color="black" />
+                </TouchableOpacity>
+            ),
         });
-    }, [navigation])
+    }, [navigation]);
 
     const renderItem = ({ item }: { item: Message }) => {
         const isMe = item.sender === "me";
         return (
-            <View className={`my-1 px-3 py-2 rounded-2xl max-w-[75%] ${isMe
-                ? "self-end bg-green-900 rounded-tl-xl rounded-bl-xl rounded-br-xl"
-                : "rounded-tr-xl rounded-bl-xl rounded-br-xl self-start bg-gray-700"
-                }`}
+            <View
+                className={`my-1 px-3 py-2 max-w-[75%] ${isMe
+                    ? `self-end bg-green-900 rounded-tl-xl rounded-bl-xl rounded-br-xl`
+                    : `rounded-tr-xl rounded-bl-xl rounded-br-xl self-start bg-gray-700`
+                    }`}
             >
-                <Text className="text-base text-white">{item.text}</Text>
-                <View className="flex-row items-center justify-end">
-                    <Text className="text-xs italic text-white me-2">{item.time}</Text>
+                <Text className={`text-white text-base`}>{item.text}</Text>
+                <View className="flex-row items-center justify-end mt-1">
+                    <Text className={`text-white italic text-xs me-2`}>{item.time}</Text>
                     {isMe && (
                         <Ionicons
                             name={
@@ -91,13 +117,12 @@ export default function SingleChatScreen() {
             setInput("");
         }
         return !input.trim();
-
-    }
+    };
 
     return (
         <SafeAreaView
             className="flex-1 bg-white"
-            edges={['right', 'left', 'bottom']}
+            edges={["right", "bottom", "left"]}
         >
             <StatusBar hidden={false} />
             <KeyboardAvoidingView
@@ -130,5 +155,5 @@ export default function SingleChatScreen() {
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
-    )
+    );
 }
